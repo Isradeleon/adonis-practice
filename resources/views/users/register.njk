@@ -1,0 +1,50 @@
+{% extends 'layouts.menu' %}
+
+{% block title %}
+  REGISTER
+{% endblock %}
+
+{% block content %}
+<h2>Sign up</h2>
+<hr>
+<div class="row">
+  <form action="/register" method="post">
+    {{ csrfField }}
+    <div class="col-xs-12 col-md-6 col-lg-4">
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input value="{{ data.name if data.name }}" autofocus type="text" name="name" class="form-control">
+      </div>
+      <div class="form-group">
+        <label for="last_name">Last name</label>
+        <input value="{{ data.last_name if data.last_name }}" type="text" name="last_name" class="form-control">
+      </div>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input value="{{ data.email if data.email }}" type="email" name="email" class="form-control">
+      </div>
+    </div>
+    <div class="col-xs-12 col-md-6 col-lg-4 col-lg-offset-1">
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" name="password" class="form-control">
+      </div>
+      <div class="form-group">
+        <label for="confirm_password">Confirm password</label>
+        <input type="password" name="confirm_password" class="form-control">
+      </div>
+      <div class="form-group">
+        <button type="submit" class="btn btn-block btn-default"><b>Send</b></button>
+      </div>
+      {% if msgs %}
+        <div class="thumbnail">
+          <h5 class="text-center text-danger"><span class="glyphicon glyphicon-exclamation-sign"></span> Error</h5>
+          {% for m in msgs %}
+            <h5 class="text-center text-danger">{{m.message}}</h5>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+  </form>
+</div>
+{% endblock %}

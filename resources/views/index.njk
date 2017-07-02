@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>
+      {% block title %}
+      {% endblock %}
+    </title>
+    <link rel="icon" href="/img/music.ico">
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.css">
+    <style media="screen">
+      .form-control, .btn{
+        border-radius: 0;
+      }
+      .form-control:focus{
+        border:1px darkgray solid;
+        box-shadow: 2px 2px 2px lightgray;
+      }
+      .thumbnail{
+        border-radius: 0;
+        box-shadow: 1px 1px 1px lightgray;
+      }
+      .artist_field:hover{
+        border-radius: 0;
+        cursor: pointer;
+        box-shadow: 2px 2px 2px lightgray;
+      }
+      .album:hover{
+        border-radius: 0;
+        cursor: pointer;
+        box-shadow: 2px 2px 2px lightgray;
+      }
+      a:hover{
+        text-decoration: none;
+      }
+      .well{
+        border-radius: 0;
+      }
+    </style>
+    {% block css %}
+    {% endblock %}
+  </head>
+  <body>
+    {% block body %}
+    {% endblock %}
+    <script src="/jquery/jquery.min.js"></script>
+    <script src="/bootstrap/js/bootstrap.js"></script>
+    {% block js %}
+    {% endblock %}
+  </body>
+</html>

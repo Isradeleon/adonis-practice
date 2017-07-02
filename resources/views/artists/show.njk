@@ -1,0 +1,97 @@
+{% extends 'layouts.menu' %}
+
+{% block title %}
+  {{artist.name.toUpperCase()}}
+{% endblock %}
+
+{% block css %}
+<style media="screen">
+  .add:hover{
+    cursor:pointer;
+    color:darkgray;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col-md-6 col-md-offset-3">
+    <img class="img-responsive" style="max-height:400px; margin:auto; border: 1px solid lightgray" src="{{artist.image}}" alt="">
+    <h3 class="text-warning text-center">{{artist.name}}</h3>
+  </div>
+</div><br>
+<div class="row">
+  {% if albums.length > 0 %}
+    <div class="well">
+      {% for album in albums %}
+        <div class="row">
+          <div class="col-md-4 col-xs-12">
+            <img style="border:1px white solid; max-height:300px; margin:auto;" class="img-responsive" src="{{album.image}}" alt="">
+            <h5 class="text-center"><em>{{album.name}}</em></h5>
+          </div>
+          <div class="col-xs-12 col-md-8">
+            {% if album.songs.length > 0 %}
+            <div style="border:1px white solid; border-bottom:0; padding-bottom:0;" class="table-responsive">
+              <table class="table">
+                <thead>
+                  <tr class="warning">
+                    <th class="text-center">Song</th>
+                    <th class="text-center">MP3</th>
+                    {% if currentUser %}
+                      <th class="text-center">
+                        <span class="glyphicon glyphicon-star"></span>
+                      </th>
+                    {% endif %}
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for song in album.songs %}
+                  <tr>
+                    <td class="text-center">{{song.name}}</td>
+                    <td class="text-center">
+                      <audio controls src="{{song.file}}"></audio>
+                    </td>
+                    {% if currentUser %}
+                      {% if song.isfav %}
+                      <td class="text-center">
+                        <span id="{{song.id}}" class="glyphicon glyphicon-ok"></span>
+                      </td>
+                      {% else %}
+                        <td class="text-center">
+                          <span id="{{song.id}}" class="glyphicon glyphicon-plus add"></span>
+                        </td>
+                      {% endif %}
+                    {% endif %}
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+            {% else %}
+              <h4 class="text-center"><em>There're no registered songs in this album yet!<br><small>Come back later!</small></em></h4>
+            {% endif %}
+          </div>
+        </div>
+        <hr style="border:1px lightgray solid;">
+      {% endfor %}
+    </div>
+  {% else %}
+    <h4 class="text-center"><em>There's no music to show :'(</em></h4>
+  {% endif %}
+</div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+  $(()=>{
+    $(".add").on("click",function(){
+      var song=$(this).attr("id")
+      $.getJSON('/favorite/'+song,function(json){
+        if (json.result) {
+          $("#"+song).removeClass("add").attr("class","glyphicon glyphicon-ok")
+        }
+      })
+    })
+  })
+</script>
+{% endblock %}

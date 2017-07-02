@@ -1,0 +1,98 @@
+{% extends 'layouts.menu' %}
+
+{% block title %}
+  NEW ALBUM
+{% endblock %}
+
+{% block css %}
+<style media="screen">
+  .selected{
+    border:1px solid gray;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<h2>New album</h2>
+<hr>
+{% if artists.length > 0 %}
+<div class="row">
+  <form enctype="multipart/form-data" action="/newalbum" method="post">
+    {{ csrfField }}
+    <input id="artist_id" type="hidden" name="artist_id" value="">
+    <div class="col-xs-12 col-md-6 col-lg-4">
+      <div class="form-group">
+        <label for="name">Album's name</label>
+        <input autofocus class="form-control" type="text" name="name" value="{{data.name if data.name}}">
+      </div>
+    </div>
+    <div class="col-xs-12 col-md-6 col-lg-4">
+      <div class="form-group">
+        <label for="date">Date of release</label>
+        <input onkeydown="return false" id="date_picker" class="form-control" type="date" name="date" value="{{data.date if data.date}}">
+      </div>
+    </div>
+    <div class="col-xs-12 col-md-6 col-lg-4">
+      <div class="form-group">
+        <label class="btn btn-block btn-info">
+          <input id="file_image" accept=".jpg, .png, .jpeg" style="display:none" type="file" name="image" value="">
+          <span id="file_indicator">Image <span class="glyphicon glyphicon-folder-open"></span></span>
+        </label>
+      </div>
+      <div class="form-group">
+        <button type="submit" class="btn btn-default btn-block"><strong>Save album</strong></button>
+      </div>
+      {% if msgs %}
+        <div class="thumbnail">
+          <h5 class="text-center text-danger"><span class="glyphicon glyphicon-exclamation-sign"></span> Error</h5>
+          {% for m in msgs %}
+            <h5 class="text-center text-danger">{{m.message}}</h5>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+  </form>
+</div>
+<label>Select an artist</label>
+<div class="row">
+  {% for artist in artists %}
+  <div style="padding:5px 10px 0px 10px;" class="col-xs-12 col-md-4">
+    <div data-id="{{artist.id}}" class="thumbnail artist_field">
+      <h5 class="text-center text-info">
+        {{artist.name}} <span style="display:none" class="select">(seleceted)</span>
+      </h5>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<h3><em>You should first register an Artist!</em></h3>
+{% endif %}
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+  $(()=>{
+    $(".artist_field").on('click',function(){
+      $("#artist_id").val($(this).attr('data-id'))
+      $(".selected").removeClass('selected')
+      $(this).addClass("selected")
+      $(".select").hide()
+      $(this).children("h5").children('span[class="select"]').show()
+    })
+
+    $("#file_image").on('change',function(){
+      var file=$(this)[0].files[0]
+      if (file) {
+        $(this).parent().children("#file_indicator")
+        .html('File <span class="glyphicon glyphicon-ok"></span>')
+        $(this).parent().attr('class','btn btn-block btn-success')
+      }else{
+        $(this).parent().children("#file_indicator")
+        .html('Image <span class="glyphicon glyphicon-folder-open"></span>')
+        $(this).parent().attr('class','btn btn-block btn-info')
+      }
+    })
+  })
+</script>
+{% endblock %}

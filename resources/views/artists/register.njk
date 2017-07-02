@@ -1,0 +1,59 @@
+{% extends 'layouts.menu' %}
+
+{% block title %}
+  NEW ARTIST
+{% endblock %}
+
+{% block content %}
+<h2>New artist</h2>
+<hr>
+<form enctype="multipart/form-data" action="/newartist" method="post">
+  {{ csrfField }}
+  <div class="col-xs-12 col-md-6 col-lg-4">
+    <div class="form-group">
+      <label for="name">Artist's name</label>
+      <input autofocus class="form-control" type="text" name="name" value="{{data.name if data.name}}">
+    </div>
+    <div class="form-group">
+      <label for="date_birth">Date of birth</label>
+      <input onkeydown="return false" id="date_picker" class="form-control" type="date" name="date_birth" value="{{data.date_birth if data.date_birth}}">
+    </div>
+    <div class="form-group">
+      <label class="btn btn-block btn-info">
+        <input id="file_image" accept=".jpg, .png, .jpeg" style="display:none" type="file" name="image" value="">
+        <span id="file_indicator">Image <span class="glyphicon glyphicon-folder-open"></span></span>
+      </label>
+    </div>
+    <div class="form-group">
+      <button type="submit" class="btn btn-default btn-block"><strong>Save artist</strong></button>
+    </div>
+    {% if msgs %}
+      <div class="thumbnail">
+        <h5 class="text-center text-danger"><span class="glyphicon glyphicon-exclamation-sign"></span> Error</h5>
+        {% for m in msgs %}
+          <h5 class="text-center text-danger">{{m.message}}</h5>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+</form>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+  $(()=>{
+    $("#file_image").on('change',function(){
+      var file=$(this)[0].files[0]
+      if (file) {
+        $(this).parent().children("#file_indicator")
+        .html('File <span class="glyphicon glyphicon-ok"></span>')
+        $(this).parent().attr('class','btn btn-block btn-success')
+      }else{
+        $(this).parent().children("#file_indicator")
+        .html('Image <span class="glyphicon glyphicon-folder-open"></span>')
+        $(this).parent().attr('class','btn btn-block btn-info')
+      }
+    })
+  })
+</script>
+{% endblock %}

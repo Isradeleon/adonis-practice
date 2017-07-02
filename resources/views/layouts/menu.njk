@@ -1,0 +1,50 @@
+{% extends 'index' %}
+
+{% block body %}
+<nav style="box-shadow:1px 0px 5px lightgray;" class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button style="border-radius:0;" type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">Stereofy</a>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+        {% if currentUser %}
+        <li><a href="/favorites">My Favorites</a></li>
+          {% if currentUser.admin %}
+            <li><a href="/newartist">New Artist</a></li>
+            <li><a href="/newalbum">New Album</a></li>
+            <li><a href="/newsong">New Song</a></li>
+          {% endif %}
+        {% endif %}
+      </ul>
+
+      <ul class="nav navbar-nav navbar-right">
+        {% if not currentUser %}
+          <li><a href="/register">Sing Up</a></li>
+          <li><a href="/login">Login</a></li>
+        {% else %}
+          <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{currentUser.email}} <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/logout">Logout</a></li>
+          </ul>
+        </li>
+        {% endif %}
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+<section class="container" style="padding-bottom:40px; padding-top:70px">
+  {% block content %}
+  {% endblock %}
+</section>
+{% endblock %}

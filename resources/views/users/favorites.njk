@@ -1,0 +1,63 @@
+{% extends 'layouts.menu' %}
+
+{% block title %}
+  FAVORITES
+{% endblock %}
+
+{% block css %}
+<style media="screen">
+  .remove:hover{
+    color:gray;
+    cursor:pointer;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<h2 class="text-center text-primary">My favorites <span class="glyphicon glyphicon-headphones"></span></h2>
+<hr>
+{% if songs.length > 0 %}
+<div class="row">
+  <div class="table-responsive">
+    <table class="table">
+      <thead>
+        <tr>
+          <th class="text-center">Song</th>
+          <th class="text-center">MP3</th>
+          <th class="text-center"><span class="glyphicon glyphicon-star"></span></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for song in songs %}
+        <tr>
+          <td class="text-center">{{song.name}} - {{song.album.name}}<br><em><a href="/artist/{{song.album.artist.id}}">{{song.album.artist.name}}</a></em></td>
+          <td class="text-center">
+            <audio controls src="{{song.file}}"></audio>
+          </td>
+          <td style="vertical-align:middle" class="text-center"><strong data-id="{{song.fav_id}}" id="strong{{song.fav_id}}" class="remove text-danger">Remove</strong></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% else %}
+<h4 class="text-center"><em>You have no favorite songs!</em></h4>
+{% endif %}
+{% endblock %}
+
+
+{% block js %}
+<script type="text/javascript">
+  $(()=>{
+    $(".remove").on("click",function(){
+      var id=$(this).attr("data-id")
+      $.getJSON("/remove/"+id,function(json){
+        if (json.result) {
+          $("#strong"+id).parent().parent().slideUp(500).empty()
+        }
+      })
+    })
+  })
+</script>
+{% endblock %}

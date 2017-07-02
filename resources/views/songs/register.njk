@@ -1,0 +1,94 @@
+{% extends 'layouts.menu' %}
+
+{% block title %}
+  NEW SONG
+{% endblock %}
+
+{% block css %}
+<style media="screen">
+  .selected{
+    border:1px solid gray;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<h2>New song</h2>
+<hr>
+{% if albums.length > 0 %}
+<div class="row">
+  <form enctype="multipart/form-data" action="/newsong" method="post">
+    {{ csrfField }}
+    <input type="hidden" id="album_id" name="album_id">
+    <div class="col-xs-12 col-md-6 col-lg-4">
+      <div class="form-group">
+        <label for="name">Song's name</label>
+        <input value="{{data.name if data.name}}" autofocus id="song_name" type="text" name="name" class="form-control">
+      </div>
+      <div class="form-group">
+        <label id="file_label" class="btn btn-block btn-info">
+          <input id="file_song" accept=".mp3" style="display:none" type="file" name="song" value="">
+          <span id="file_indicator">Song <span class="glyphicon glyphicon-folder-open"></span></span>
+        </label>
+      </div>
+      <div class="form-group">
+        <button type="submit" class="btn btn-default btn-block"><strong>Save song</strong></button>
+      </div>
+    </div>
+    <div class="col-xs-12 col-md-6 col-lg-4">
+      {% if msgs %}
+      <div class="thumbnail">
+        <h5 class="text-center text-danger"><span class="glyphicon glyphicon-exclamation-sign"></span> Error</h5>
+        {% for m in msgs %}
+        <h5 class="text-center text-danger">{{m.message}}</h5>
+        {% endfor %}
+      </div>
+      {% endif %}
+    </div>
+  </form>
+</div>
+<label>Select an album</label>
+<div class="row">
+  {% for album in albums %}
+  <div style="padding:10px;" class="col-xs-12 col-sm-6 col-md-4">
+    <div data-id="{{album.id}}" class="thumbnail album">
+      <div style="height:200px; background-image:url({{album.image}}); background-size:cover; background-position:center center;">
+      </div>
+
+      <h4 class="text-center text-info">{{album.name}} <span style="display:none" class="select">(seleceted)</span></h4>
+      <h5 class="text-center text-info">{{album.artist.name}}</h5>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<h3><em>You should first register an Album!</em></h3>
+{% endif %}
+{% endblock %}
+
+{% block js %}
+<script>
+$(()=>{
+  $(".album").on('click',function(){
+    $("#album_id").val($(this).attr("data-id"))
+    $(".selected").removeClass('selected')
+    $(this).addClass("selected")
+    $(".select").hide()
+    $(this).children("h4").children('span[class="select"]').show()
+  })
+
+  $("#file_song").on('change',function(){
+    var file=$(this)[0].files[0]
+    if (file) {
+      $(this).parent().children("#file_indicator")
+      .html('File <span class="glyphicon glyphicon-ok"></span>')
+      $(this).parent().attr('class','btn btn-block btn-success')
+    }else{
+      $(this).parent().children("#file_indicator")
+      .html('Song <span class="glyphicon glyphicon-folder-open"></span>')
+      $(this).parent().attr('class','btn btn-block btn-info')
+    }
+  })
+})
+</script>
+{% endblock %}
